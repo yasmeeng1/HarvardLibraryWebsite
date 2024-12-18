@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post">
+        <div class="mb-3">
+        <!--accept username-->
+            <input autocomplete="off" autofocus class="form-control mx-auto" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="mb-3">
+        <!-- accept password for login-->
+            <input class="form-control mx-auto" name="password" placeholder="Password" type="password">
+        </div>
+    <!-- submit the form so you login and ge taccess to full cabotato features!!-->
+        <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+{% endblock %}
