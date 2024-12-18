@@ -1,0 +1,264 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Friend Tracker
+{% endblock %}
+
+{% block main %}
+    <div class="container" style="margin-bottom: 20px;">
+        <h2>Friend Tracker!</h2>
+
+    <!-- Filter Form -->
+        <form method="post" action="/friendtracker">
+            <div class="row">
+            <!-- Location Picker -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="study_locations" class="form-label">Study Locations:</label>
+                        <select id="study_locations" name="study_locations" class="form-control" required>
+                            <option value="" disabled selected>Select an option</option>
+                        <!-- loads in each of the study locations from app.py -->
+                            {% for location in study_locations_list %}
+                                <option value="{{ location }}">
+                                    {{ location }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            <!-- Time Studying Picker -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="time_studying" class="form-label">Study Duration:</label>
+                        <select id="time_studying" name="time_studying" class="form-control" required>
+                            <option value="" disabled selected>Select an option</option>
+                        <!-- users can study for up to 10 hours and 45 minutes -->
+                            {% for hour in range(0, 10) %}
+                                {% for minute in [0, 15, 30, 45] %}
+                                    <option value="{{ "%02d:%02d" | format(hour, minute) }}">
+                                        {{ "%d:%02d" | format(hour, minute) }}
+                                    </option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            <!-- Locked in Level Picker for users to decide if htey need to be on a more intense floor of cabot-->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="locked_in_levels" class="form-label">Locked-in Level:</label>
+                        <select id="locked_in_levels" name="locked_in_levels" class="form-control" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="Barely Trying">Barely Trying</option>
+                            <option value="Kinda Focused">Kinda Focused</option>
+                            <option value="In the Zone">In The Zone</option>
+                            <option value="Locked and Loaded">Fully Locked and Loaded</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary">Submit your study location!</button>
+        </form>
+
+        <h3>Study Locations</h3>
+    <!-- create a row that stores 2 of the study locations in it -->
+        <div class="row">
+        <!-- location number 1 -->
+        <!-- Colorful Couches -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='lower_couches.jpeg') }}" class="card-img-top img-fluid" alt="Colorful Couches Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Colorful Couches</h5>
+                        <p class="card-text">Open Study Space -- Lower Level</p>
+                    <!-- displays all of the friends that are studying at the location in a table -->
+                        {% if location_friends[0] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th>Friend Name</th>
+                                        <th>Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                {% for friend in location_friends[0] %}
+                                    <tbody>
+                                        <tr>
+                                <!-- display the friend name and level of locked in -->
+                                            <td>{{ friend.name }}</td>
+                                            <td>{{ friend.locked_in }}</td>
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                    <!-- If there's no one studying at the location, then display that there is no one -->
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        <!-- repeat the same card format for all of the other study location cards  -->
+        <!-- Dinosaur Egg -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='lower_dinoegg.jpeg') }}" class="card-img-top img-fluid" alt="Dinosaur Egg Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Dinosaur Egg</h5>
+                        <p class="card-text">Private Study Space -- Lower Level</p>
+                        {% if location_friends[1] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th>Friend Name</th>
+                                        <th>Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                {% for friend in location_friends[1] %}
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ friend.name }}</td>
+                                            <td>{{ friend.locked_in }}</td>
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+        <!-- Lower Study Room -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='lower_studyroom.jpeg') }}" class="card-img-top img-fluid" alt="Lower Study Room Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Lower Study Room</h5>
+                        <p class="card-text">Small Group Study Space -- Lower Level</p>
+                        {% if location_friends[2] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th>Friend Name</th>
+                                        <th>Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                {% for friend in location_friends[2] %}
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ friend.name }}</td>
+                                            <td>{{ friend.locked_in }}</td>
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        <!-- Main Study Room -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='main_studyroom.jpeg') }}" class="card-img-top img-fluid" alt="Main Study Room Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Main Study Room</h5>
+                        <p class="card-text">Small Group Study Space -- Main Level</p>
+                        {% if location_friends[3] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th>Friend Name</th>
+                                        <th>Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                {% for friend in location_friends[3] %}
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ friend.name }}</td>
+                                            <td>{{ friend.locked_in }}</td>
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+        <!-- Table Nooks -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='main_tablenook.jpeg') }}" class="card-img-top img-fluid" alt="Table Nooks Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Table Nooks</h5>
+                        <p class="card-text">Small Group Study Space -- Main Floor</p>
+                        {% if location_friends[4] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-start">Friend Name</th>
+                                        <th class="text-end">Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for friend in location_friends[4] %}
+                                        <tr>
+                                            <td class="text-start">{{ friend.name }}</td>
+                                            <td class="text-end">{{ friend.locked_in }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        <!-- Little Nooks -->
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='second_nook.jpeg') }}" class="card-img-top img-fluid" alt="Little Nooks Photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Little Nooks</h5>
+                        <p class="card-text">Individual Study Space -- Second Floor</p>
+                        {% if location_friends[5] %}
+                            <table class="centered-table">
+                                <thead>
+                                    <tr>
+                                        <th>Friend Name</th>
+                                        <th>Locked In Level</th>
+                                    </tr>
+                                </thead>
+                                {% for friend in location_friends[5] %}
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ friend.name }}</td>
+                                            <td>{{ friend.locked_in }}</td>
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <p>No friends are currently studying in this spot!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

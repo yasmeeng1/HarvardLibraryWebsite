@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Study Leaderboard
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+    <!-- Header Section -->
+        <header class="text-center mb-5">
+            <h1 class="navbar-brand">Study Leaderboard</h1>
+            <p class="lead">Submit your progress and see how you stack up against others!</p>
+        </header>
+
+    <!-- Submission Form -->
+        <section class="submission-form">
+            <h2 class="navbar-brand">Log Your Study Session</h2>
+            <form method="POST" action="/submit-progress" class="mb-5">
+                <div class="mb-3">
+                <!-- name input-->
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                <!-- flex how many assignments you did input -->
+                    <label for="assignments" class="form-label">Number of Assignments Completed</label>
+                    <input type="number" id="assignments" name="assignments" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                <!-- flex how much time you have spent locked in input -->
+                    <label for="time" class="form-label">Time Spent (in minutes)</label>
+                    <input type="number" id="time" name="time" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Progress</button>
+            </form>
+        </section>
+
+    <!-- Leaderboard Section -->
+        <section class="leaderboard">
+            <h2 class="navbar-brand">Top Performers</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Assignments Completed</th>
+                        <th>Time Spent (minutes)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                        <tr>
+                    <!-- return a tbale showing the top people ont he leaderboard-->
+                            <td>{{ loop.index }}</td>
+                            <td>{{ entry.name }}</td>
+                            <td>{{ entry.assignments }}</td>
+                            <td>{{ entry.time }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+{% endblock %}

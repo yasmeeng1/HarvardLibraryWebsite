@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Music Page
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+    <!-- Header Section -->
+        <header class="text-center mb-5">
+            <h1 class="navbar-brand">Study Session</h1>
+            <p class="lead">STAY ON THIS PAGE TO LISTEN TO MUSIC AND TIME YOURSELF WHILE YOU WORK!</p>
+        </header>
+
+    <!-- Pomodoro Timer Section -->
+        <section class="pomodoro-timer">
+            <h2 class="navbar-brand">Pomodoro Timer</h2>
+            <p class="lead">The Pomodoro Technique is a time management method where you work for 25 minutes then take a break for 5 minutes!</p>
+            <div id="timer" class="text-center timer-display">
+                25:00
+            </div>
+            <div class="text-center mt-4">
+                <button id="startButton" class="btn btn-primary">Start</button>
+                <button id="breakButton" class="btn btn-primary">Take a Break</button>
+                <button id="stopButton" class="btn btn-primary">Stop</button>
+                <button id="restartButton" class="btn btn-primary">Restart</button>
+            </div>
+        </section>
+
+    <!-- Pomodoro Timer Script -->
+    <!-- used this to further udnerstand how timers work in javascript https://www.geeksforgeeks.org/explain-the-working-of-timers-in-javascript/ -->
+        <script>
+            let timer;
+        // true for work, false for break
+            let isWorking = true;
+        // this converts 25 minutes into seconds
+            let timeLeft = 25 * 60;
+            let timerDisplay = document.getElementById("timer");
+            let startButton = document.getElementById("startButton");
+            let breakButton = document.getElementById("breakButton");
+            let stopButton = document.getElementById("stopButton");
+            let restartButton = document.getElementById("restartButton");
+
+        // This updates update timer display
+            function updateTimerDisplay() {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                if (seconds < 10) seconds = "0" + seconds;
+                timerDisplay.textContent = minutes + ":" + seconds;
+            }
+
+        //  Start  the timer
+            function startTimer() {
+            // Clear any existing timer so it's fresh
+                clearInterval(timer);
+
+                startButton.disabled = true;
+            // Users can always access the break button
+                breakButton.style.display = "inline-block";
+            // Users can always access the stop button
+                stopButton.style.display = "inline-block";
+
+                timer = setInterval(function() {
+                    timeLeft--;
+                    updateTimerDisplay();
+
+                    if (timeLeft <= 0) {
+                    // Stop the timer
+                        clearInterval(timer);
+                    // Reset the timer variable
+                        timer = null;
+                    // Switch from work to break
+                        isWorking = !isWorking;
+                    // Set the next session time so you can cycle through pomodoros
+                        timeLeft = isWorking ? 25 * 60 : 5 * 60;
+                    // Enable the start button again so ppl can keep lcoking in
+                        startButton.disabled = false;
+                    }
+                }, 1000);
+            }
+
+        // Function to handle break time
+            function takeBreak() {
+                clearInterval(timer);
+                isWorking = false;
+                timeLeft = 5 * 60;
+                updateTimerDisplay();
+                startTimer();
+            }
+
+        // Function to stop the timer
+            function restartTimer() {
+                clearInterval(timer);
+                startButton.disabled = false;
+                timeLeft = 25 * 60;
+                updateTimerDisplay();
+            }
+
+            function stopTimer() {
+                clearInterval(timer);
+                startButton.disabled = false;
+            // Do not reset timeLeft
+                updateTimerDisplay();
+            }
+
+        // Event listener for the start button
+        // Event listener for the start button
+            startButton.addEventListener("click", function() {
+                startTimer(); // Always start or resume the timer
+            });
+
+        // Event listener for the break button
+            breakButton.addEventListener("click", function() {
+                takeBreak(); // Trigger break function
+            });
+
+        // Event listener for the stop button
+            stopButton.addEventListener("click", function() {
+                stopTimer(); // Trigger stop function
+            });
+
+        // Event listener for the restart button
+            restartButton.addEventListener("click", function() {
+                restartTimer(); // Trigger restart function
+            });
+
+        // Show the timer display
+            updateTimerDisplay();
+        </script>
+
+    <!-- Playlist section for tunes -->
+        <section class="pomodoro-timer">
+            <h2 class="navbar-brand">Music Options</h2>
+            <p class="lead"> Listen to some music (or a CS50 podcast) on Spotify while you study </p>
+        <!-- integrated Spotify embed option here-->
+        <!-- https://developer.spotify.com/documentation/embeds/tutorials/creating-an-embed -->
+            <div class="music-player">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1WH6WVBwPBz35ZbWsgCpgr?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1lcbYKyLFvyLb5rZXbVVYc?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/3MxtKWdpxTVvxnAYPDJuKV?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </section>
+{% endblock %}
