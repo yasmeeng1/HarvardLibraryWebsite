@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Roombook
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h2>Choose a Room</h2>
+
+    <!-- Filter Form -->
+        <form method="get" action="/filter">
+            <div class="row">
+            <!-- users pick the date where they want to see if a room is available -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="filter_date" class="form-label">Select Date:</label>
+                        <input type="date" id="filter_date" name="filter_date" class="form-control" required>
+                    </div>
+                </div>
+
+            <!-- Users pick the start time for when they want to see if a room is available -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="filter_start_time" class="form-label">Start Time:</label>
+                        <select id="filter_start_time" name="filter_start_time" class="form-control" required>
+                            {% for hour in range(0, 24) %}
+                                {% for minute in [0, 15, 30, 45] %}
+                                    {% set hour_12 = (hour - 1) % 12 + 1 %}
+                                    {% set period = "AM" if hour < 12 else "PM" %}
+                                    <option value="{{ "%02d:%02d" | format(hour, minute) }}">
+                                        {{ "%d:%02d %s" | format(hour_12, minute, period) }}
+                                    </option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            <!-- Users pick the start time for when they want to see if a room is available -->
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="filter_end_time" class="form-label">End Time:</label>
+                        <select id="filter_end_time" name="filter_end_time" class="form-control" required>
+                            {% for hour in range(0, 24) %}
+                                {% for minute in [0, 15, 30, 45] %}
+                                    {% set hour_12 = (hour - 1) % 12 + 1 %}
+                                    {% set period = "AM" if hour < 12 else "PM" %}
+                                    <option value="{{ "%02d:%02d" | format(hour, minute) }}">
+                                        {{ "%d:%02d %s" | format(hour_12, minute, period) }}
+                                    </option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary">Filter By Availability</button>
+        </form>
+
+    <!-- Room Cards for Filtered Rooms -->
+        <div class="row">
+            {% if available_rooms %}
+                {% for room in available_rooms %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <img src="{{ room.image if room.image else 'https://via.placeholder.com/500x300.png?text=No+Image+Available' }}" class="card-img-top img-fluid" alt="{{ room.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ room.name }}</h5>
+                                <p class="card-text">{{ room.description }}</p>
+                                <form method="get" action="/reserve">
+                                    <input type="hidden" name="room_id" value="{{ room.id }}">
+                                    <button type="submit" class="btn btn-primary">Reserve</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    <!-- Display All Rooms WHen No Filter is Applied -->
+        {% if not available_rooms %}
+            <h3>All Cabot Rooms</h3>
+            <div class="row">
+        <!-- Room 1 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-04/LL10%20Cabot%20Inside%20view.jpg" class="card-img-top img-fluid" alt="Room 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot LL10</h5>
+                            <p class="card-text">Group Study Room -- Lower Level</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="1">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        <!-- Room 2 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-04/Cabot%20L205%20-%20Inside%20View.jpg" class="card-img-top img-fluid" alt="Room 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot L212</h5>
+                            <p class="card-text">Group Study Room -- Second Floor.</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="2">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <!-- Second Row of Rooms (we make a new row for every 2 images) -->
+            <div class="row">
+        <!-- Room 3 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-03/Cabot-L107-VideoConference-01.jpg" class="card-img-top img-fluid" alt="Room 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot L107</h5>
+                            <p class="card-text">Video Conference Room -- Main Level.</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="3">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        <!-- Room 4 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-04/Cabot%20L214%20-%20Inside%20View%201.jpg" class="card-img-top img-fluid" alt="Room 4">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot L214</h5>
+                            <p class="card-text">Group Study Room -- Second Floor</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="4">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <!-- Third Row of Rooms -->
+            <div class="row">
+        <!-- Room 5 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-04/L006%20inside.jpg" class="card-img-top img-fluid" alt="Room 5">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot LL06</h5>
+                            <p class="card-text">Group Study Room -- Lower Level</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="5">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        <!-- Room 6 -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="https://library.harvard.edu/sites/default/files/spacefinder/rooms/2018-04/Cabot%20L210%20-%20Outside%20View.jpg" class="card-img-top img-fluid" alt="Room 6">
+                        <div class="card-body">
+                            <h5 class="card-title">Cabot L210</h5>
+                            <p class="card-text">Group Study Room -- Second Floor</p>
+                            <form method="get" action="/reserve">
+                                <input type="hidden" name="room_id" value="6">
+                                <button type="submit" class="btn btn-primary">Reserve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
